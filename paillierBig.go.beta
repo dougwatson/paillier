@@ -11,7 +11,6 @@ import (
 	"math/big"
 	"os"
 	"runtime"
-	"strconv"
 	"strings"
 	"sync"
 )
@@ -201,7 +200,7 @@ func Pow(a, b int64) int64 {
 	return p
 }
 
-// func client(trafficChannel chan string, publicKey *PublicKey, privateKey *PrivateKey, i int) {
+//func client(trafficChannel chan string, publicKey *PublicKey, privateKey *PrivateKey, i int) {
 func clientDecrypt(trafficChannel chan string, key PrivateKey, i int) {
 	defer done.Done()
 	//	var plusBytes []byte
@@ -229,46 +228,46 @@ func clientEncryptInt(trafficChannel chan string, key PrivateKey, i int) {
 	defer done.Done()
 	for line := range trafficChannel {
 		arr := strings.Split(line, ",") //Delimeter for multiple value inputs to stdin. will be encoded in base 3 billion (3E6, 3E12) for 3 values and base 3 quintillion (3E9) for 2 values
-		var i int64
 
 		bi := new(big.Int)
 		p := new(big.Int)
 		bi0 := new(big.Int)
 		bi1 := new(big.Int)
+		bi2 := new(big.Int)
+		/*
+			if len(arr) == 2 {
+				//arr0, err := strconv.ParseInt(arr[0], 10, 64)
+				//		checkErr(err)
+				//			arr1, err := strconv.ParseInt(arr[1], 10, 64)
+				//	checkErr(err)
+				bi0.SetString(arr[0], 10) // decimal
+				bi1.SetString(arr[1], 10) // decimal
+				p.Mul(bi0, 1000000000)    //			i = arr0*Pow(10, 9) + arr1 //this will move the second number (arr1) into the most significant half of i
+				bi.Add(p, bi1)            //this will move the second number (arr1) into the most significant half of i
 
-		if len(arr) == 2 {
-			//arr0, err := strconv.ParseInt(arr[0], 10, 64)
-			bi0.SetString(arr[0], 10) // decimal
-			//		checkErr(err)
-			//			arr1, err := strconv.ParseInt(arr[1], 10, 64)
-			bi1.SetString(arr[1], 10) // decimal
-			//	checkErr(err)
-			p.Mul(bi0, new(big.Int).SetInt64(1000000000))
-			//p.Mul(bi0, 1000000000) //			i = arr0*Pow(10, 9) + arr1 //this will move the second number (arr1) into the most significant half of i
-
-			bi.Add(p, bi1) //this will move the second number (arr1) into the most significant half of i
-
-		} else if len(arr) == 3 {
-			arr0, err := strconv.ParseInt(arr[0], 10, 64)
-			checkErr(err)
-			arr1, err := strconv.ParseInt(arr[1], 10, 64)
-			checkErr(err)
-			arr2, err := strconv.ParseInt(arr[2], 10, 64)
-			checkErr(err)
-			i = arr0*Pow(10, 12) + arr1*Pow(10, 6) + arr2 //this will move the second number (arr1) into the most significant half of i
-
-		} else {
-			var err error
-			i, err = strconv.ParseInt(line, 10, 64)
-			if err != nil {
+			} else if len(arr) == 3 {
+				arr0, err := strconv.ParseInt(arr[0], 10, 64)
 				checkErr(err)
-			}
-		}
+				arr1, err := strconv.ParseInt(arr[1], 10, 64)
+				checkErr(err)
+				arr2, err := strconv.ParseInt(arr[2], 10, 64)
+				checkErr(err)
+				i = arr0*Pow(10, 12) + arr1*Pow(10, 6) + arr2 //this will move the second number (arr1) into the most significant half of i
+
+			} else {
+				//			var err error
+				//		i, err = strconv.ParseInt(line, 10, 64)
+				//	if err != nil {
+				//	checkErr(err)
+				//}
+		*/
+		bi0.SetString(arr[0], 10) // decimal
+		//	}
 		if *verbose {
-			println("i=", i)
+			println("bi=", bi)
 		}
-		m := new(big.Int).SetInt64(i)
-		c, err := Encrypt(&key.PublicKey, m.Bytes())
+		//		m := new(big.Int).SetInt64(i)
+		c, err := Encrypt(&key.PublicKey, bi0.Bytes())
 		if err != nil {
 			fmt.Println(err)
 			return
