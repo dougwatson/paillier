@@ -1,4 +1,4 @@
-# Paillier privacy preserving encryption
+# Paillier - privacy preserving encryption
 Example homomorphic encryption in pure 100% GO
 (beta version - not constant time)
 
